@@ -1,8 +1,9 @@
 <?php
 
-use App\Http\Controllers\ProductController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ProductController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,16 +20,24 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('/products', [ProductController::class, 'allProducts']);
 
 Route::group(['middleware' => 'auth:sanctum'], function() {
 
-    Route::get('/products/{product}', [ProductController::class, 'show']);
-    
+
+    Route::post('/products/create', [ProductController::class, 'create']);
+    Route::put('/products/update/{product}', [ProductController::class, 'update']);
+    Route::delete('/products/{product}', [ProductController::class, 'destroy']);
+    Route::post('/logout', [AuthController::class, 'logout']);
+
+
 });
 
-Route::post('/products/create', [ProductController::class, 'create']);
-Route::post('/products/update/{product}', [ProductController::class, 'update']);
+Route::get('/products/{product}', [ProductController::class, 'show']);
 
-Route::delete('/products/{product}', [ProductController::class, 'destroy']);
+Route::get('/products', [ProductController::class, 'allProducts']);
+
+
+// Auth
+Route::post('/register', [AuthController::class, 'register']);
+Route::post('/login', [AuthController::class, 'login']);
 
